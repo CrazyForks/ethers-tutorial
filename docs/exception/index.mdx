@@ -1,0 +1,76 @@
+import Link from "@docusaurus/Link";
+
+# 异常处理
+
+在编写代码的时候通常会使用 `try...catch` 来捕获异常，例如：
+
+```js
+import { ethers } from "ethers";
+try {
+  const provider = new ethers.JsonRpcProvider(
+    "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+  );
+  // 提供了一个不存在的地址，会抛出异常
+  const balance = await provider.getBalance("0x");
+  console.log(balance);
+} catch (error: any) {
+  console.log(error.code) // 错误代码
+  console.log(error.message) // 错误信息
+}
+```
+
+这种方式你不知道错误是不是从 `ethers` 抛出来的。
+
+```js
+import { ethers } from "ethers";
+try {
+  // 抛出了一个异常
+  throw new Error("hello");
+
+
+  const provider = new ethers.JsonRpcProvider(
+    "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+  );
+  // 提供了一个不存在的地址，会抛出异常
+  const balance = await provider.getBalance("0x");
+  console.log(balance);
+} catch (error: any) {
+  console.log(error)
+}
+```
+
+import Exception from "./Exception";
+
+<Exception />
+
+### 错误代码捕获
+
+`ethers` 提供了工具函数 `isError` <Link to="/docs/utils/#iserror">具体看这里</Link>
+
+下面使用错误代码 `UNSUPPORTED_OPERATION` 捕获异常：
+
+```js
+import { ethers } from "ethers";
+try {
+  const provider = new ethers.JsonRpcProvider(
+    "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+  );
+  // 提供了一个不存在的地址，会抛出异常
+  const balance = await provider.getBalance("0x");
+  console.log(balance);
+} catch (error: any) {
+  if (ethers.isError(error, "UNSUPPORTED_OPERATION")) {
+    // code...
+  }
+}
+```
+
+这种方式可以精确的捕获 `ethers` 抛出的异常，来处理需要的错误。
+
+## 总结
+
+- 使用 `try...catch` 可以捕获代码中的异常，但无法区分异常来源。
+- `ethers` 提供了 `isError` 工具方法，可以更精确地判断和处理由 `ethers` 抛出的特定错误类型。
+- 推荐在实际开发中结合错误代码进行异常捕获和处理，提高代码的健壮性和可维护性。
+
+本章所有示例代码，均可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/blob/main/docs/exception/Exception.tsx) 中找到。

@@ -1,0 +1,179 @@
+# 事件监听
+
+## 监听合约事件
+
+:::tip 什么是合约事件？
+在 Solidity 合约中，你可以使用 event 关键字定义事件，并通过 emit 发出。
+
+这些事件会被记录在以太坊区块链的日志中（logs），前端或后台可以监听这些事件来感知链上变化。
+:::
+
+例如：当你调用 `transfer()` 函数时，合约可能会 `emit` 上面的事件。
+
+```
+event Transfer(address indexed from, address indexed to, uint256 value);
+```
+
+`ethers.js` 提供了简单的方式通过 `Contract` 实例监听事件：
+
+```js
+contract.on(eventName, listener); // 持续监听 eventName 事件
+contract.once(eventName, listener); // 只监听一次，当触发后不再监听
+contract.off(eventName, listener); // 移除监听事件
+contract.removeAllListeners(eventName?); // 取消所有监听器
+```
+
+### 监听合约事件
+
+由于该 `RPC` 节点禁用了 `eth_newFilter` 方法，因为它需要较高的资源支持（需要维护事件日志索引）。示例代码没有办法测试，了解事件监听以在支持的节点使用。
+
+下面监听 `Transfer` 事件，该事件当你向别的地址进行转账或者别人转账到你地址时会触发。
+
+```js
+import { ethers } from "ethers";
+
+// 配置提供者
+const provider = new ethers.JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+
+// 配置钱包
+const wallet = new ethers.Wallet("你的钱包私钥", provider);
+
+// ERC-20 合约地址
+const tokenAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; // 替换为代币合约地址, 这里以 USDC 为例
+
+// 编写 ABI 事件
+const tokenABI = [
+  "event Transfer(address indexed from, address indexed to, uint256 value)",
+];
+
+// 创建代币合约实例
+const contract = new ethers.Contract(tokenAddress, tokenABI, wallet);
+
+// 监听 Transfer 事件
+contract.on("Transfer", (from, to, value) => {
+  console.log(`转账事件:`);
+  console.log(`- 发送者: ${from}`);
+  console.log(`- 接收者: ${to}`);
+  console.log(`- 数量: value`); // 假设代币精度为 18
+  console.log(`- 交易哈希: ${event.transactionHash}`);
+});
+```
+
+### 移除事件
+
+```js
+function transferEvent(from, to, value) => {
+  // code...
+}
+
+// 监听 Transfer 事件
+contract.on("Transfer", transferEvent);
+
+// 3秒后移除事件
+setTimeout(() => {
+  contract.off("Transfer", transferEvent);
+
+  // 或者移除所有事件
+  contract.removeAllListeners("Transfer");
+  contract.removeAllListeners(); // 不传事件名，移除所有定义的事件
+}, 3000)
+```
+
+### 其他事件
+
+`ERC-20` 标准只要求这两个事件，但许多实际合约会扩展更多事件来满足特定需求。
+
+- `Transfer(address indexed _from, address indexed _to, uint256 _value)`
+  - 用途：记录代币从 `_from` 地址转移到 `_to` 地址，转移数量为 `_value`。
+  - 触发场景：
+    - 当 调用 `transfer` 函数（直接转账）。
+    - 调用 `transferFrom` 函数（授权转账）。
+    - 代币铸造（`_from` 为 `address(0)`）。
+    - 代币销毁（`_to` 为 `address(0)`）。
+- `Approval(address indexed _owner, address indexed _spender, uint256 _value)`
+  - 用途：记录 `_owner` 授权 `_spender` 可以从其账户转移 `_value` 数量的代币。
+    - 调用 `approve` 函数设置或更新授权额度。
+    - 撤销授权（设置 `_value` 为 `0`）。
+
+**示例伪代码：**
+
+```js
+const tokenABI = [
+  "Approval(address indexed _owner, address indexed _spender, uint256 _value)",
+];
+
+contract.on("Approval", (owner, spender, value) => {
+  console.log(`授权: ${owner} 授权 ${spender} 数量：value`);
+});
+```
+
+### 监听所有事件
+
+`*` 定义监听所有事件，事件必须在 `ABI` 接口中体现。
+
+```js
+const tokenABI = [
+  "event Transfer(address indexed from, address indexed to, uint256 value)",
+  "Approval(address indexed _owner, address indexed _spender, uint256 _value)",
+];
+
+contract.on("*", (event) => {
+  // code ...
+});
+```
+
+### 事件过滤
+
+监听所有 `Transfer` 事件可能消耗较多资源，通过过滤器`（filter）`仅监听特定地址的事件。
+
+`contract.filters.Transfer(from, to)`
+
+- `from`：监听 `from` 地址的事件，`null` 表示任意地址。
+- `to`：监听 `to` 地址的事件，`null` 表示任意地址。
+
+```js
+import { ethers } from "ethers";
+
+const provider = new ethers.providers.JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+const contractAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; // 代币合约地址（如 USDC）
+const yourAddress = "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"; // 替换为你的以太坊地址
+const abi = [
+  "event Transfer(address indexed _from, address indexed _to, uint256 _value)",
+];
+
+const contract = new ethers.Contract(contractAddress, abi, provider);
+
+// 只监听转入你的地址的事件
+const filterTo = contract.filters.Transfer(
+  null,
+  "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"
+);
+contract.on(filterTo, (from, to, value) => {
+  console.log(`收到转账: 从 ${from} 转入 ${value} 代币`);
+});
+
+// 只监听从你的地址转出的事件
+const filterFrom = contract.filters.Transfer(
+  "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d",
+  null
+);
+contract.on(filterFrom, (from, to, value) => {
+  console.log(`转出代币: 转给 ${to} ${value} 代币`);
+});
+```
+
+## 总结
+
+本节介绍了如何使用 ethers.js 监听以太坊合约事件，包括：
+
+- 事件的基本概念和用途；
+- 如何通过 `contract.on`、`contract.off` 等方法添加和移除事件监听器；
+- 监听 `ERC-20` 标准事件（如 `Transfer`、`Approval`）的方法；
+- 通过过滤器`（filter）`只监听特定地址相关的事件，提升效率；
+- 监听所有事件的方式及注意事项。
+
+掌握事件监听可以帮助你实时感知链上变化，开发更智能的前端和后端应用。建议在支持事件过滤的节点环境下测试和使用相关功能。

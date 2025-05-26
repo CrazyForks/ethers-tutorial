@@ -1,0 +1,65 @@
+{
+  "name": "ethers-tutorial",
+  "version": "0.0.0",
+  "private": true,
+  "author": "xiejiahe",
+  "homepage": "https://ethersjs.cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xjh22222228/ethers-tutorial.git"
+  },
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "@docusaurus/core": "3.7.0",
+    "@docusaurus/preset-classic": "3.7.0",
+    "@docusaurus/theme-live-codeblock": "^3.7.0",
+    "@mdx-js/react": "^3.0.0",
+    "antd": "^5.25.2",
+    "clsx": "^2.0.0",
+    "ethers": "^6.14.1",
+    "prism-react-renderer": "^2.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.7.0",
+    "@docusaurus/tsconfig": "3.7.0",
+    "@docusaurus/types": "3.7.0",
+    "dotenv": "^16.5.0",
+    "typescript": "~5.6.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "description": "## 目录",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xjh22222228/ethers-tutorial/issues"
+  }
+}

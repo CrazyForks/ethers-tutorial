@@ -1,0 +1,84 @@
+---
+sidebar_position: 2
+title: 创建钱包
+---
+
+# 创建钱包
+
+## 创建随机钱包
+
+使用静态方法 `createRandom()` 可以创建一个随机钱包：
+
+**安全性：**
+
+- 生成的私钥和助记词是敏感信息，必须妥善存储。泄露私钥或助记词会导致资金丢失。
+- 在生产环境中，建议将私钥和助记词加密存储，或使用硬件钱包。
+
+**助记词：**
+
+- 助记词遵循 BIP-39 标准，可以用于恢复钱包。
+- 建议用户备份助记词，并将其存储在安全的地方（例如离线存储）。
+
+```js
+import { ethers } from "ethers";
+
+const wallet = ethers.Wallet.createRandom();
+console.log(wallet.address); // 钱包地址
+// 0x74089E5511697ACDB91AB3052d668EC95fec9d3e
+
+console.log(wallet.privateKey); // 私钥
+// 0x21c7611114c97f921dee5ac91820358da89c94d4e83a230d65b8e250ad5add98
+
+console.log(wallet.publicKey); // 公钥
+// 0x033d6e42b124df585baec8bc9e16230f25112e91a283cd1f47f86f249608f41cea
+
+console.log(wallet.mnemonic?.phrase || "无"); // 助记词
+// tube october fresh sausage amateur garbage blue silver reveal exact lab february
+```
+
+import CreateWallet from "./components/CreateWallet";
+
+<CreateWallet />
+
+## 从私钥导入钱包
+
+可以在 `MetaMask` 钱包中找到私钥。
+
+```js
+const wallet = new ethers.Wallet("你的钱包私钥");
+// 和你的 MetaMask 钱包地址一致说明导入成功
+console.log(wallet.address); // 0x2cFC43B94126595E8B636fed9fB585fF220Bc97d
+```
+
+import PrivateWallet from "./components/PrivateWallet";
+
+<PrivateWallet />
+
+## 从助记词导入钱包
+
+使用 `Wallet.fromPhrase` 警方方法使用助记词导入钱包。
+
+助记词在 `MetaMask` 钱包中找到。
+
+```js
+const wallet = ethers.Wallet.fromPhrase(
+  "xxx permit arch unlock smoke poverty stamp robust lesson maple sun remember"
+);
+console.log(wallet.address); // 0x2cFC43B94126595E8B636fed9fB585fF220Bc97d
+```
+
+import FromPhraseWallet from "./components/FromPhraseWallet";
+
+<FromPhraseWallet />
+
+## 总结
+
+本章介绍了三种常用的钱包创建与导入方式：
+
+- 通过 `createRandom()` 创建全新随机钱包，适合新用户。
+- 通过私钥导入已有钱包，适合已有私钥的用户。
+- 通过助记词导入钱包，便于跨设备恢复和备份。
+
+无论哪种方式，私钥和助记词都极其重要，务必妥善保管，避免泄露。建议在安全环境下操作，并定期备份相关信息。
+
+本章所有示例代码，均可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/tree/main/docs/wallet/components) 中找到。

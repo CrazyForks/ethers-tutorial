@@ -1,0 +1,27 @@
+.icon {
+  width: 36px;
+  height: 36px;
+}
+.wallet {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.wallet:hover {
+  background-color: #f0f0f0;
+}
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+}
+.walletInfo {
+  margin-left: 10px;
+}
+.installed {
+  font-size: 13px;
+}

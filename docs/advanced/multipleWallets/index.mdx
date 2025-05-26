@@ -1,0 +1,127 @@
+# 流行钱包判断
+
+在实际的场景中，用户不可能只安装一个浏览器插件钱包，比如 `MetaMask`, 它可能安装多个钱包。
+
+下面是一些流行的钱包：
+
+- `MetaMask`
+- `Trust Wallet`
+- `Coinbase Wallet`
+- `CoolWallet`
+- `MathWallet`
+- `WalletConnect`
+- ...
+
+## 判断钱包是否已安装
+
+不管安装多少个钱包，都只会有一个 `window.ethereum`, 取决于浏览器的执行机制
+
+有些钱包会在 `window.ethereum` 上挂载 `isMetaMask` 属性，用来判断是否为 `MetaMask` 钱包
+
+在某些钱包如 `Trust Wallet` 还会在 `window` 挂载 `trustWallet` 对象，可以判断是否存在，存在则表示已安装。
+
+这里只提供思路，具体需要看钱包的官方文档。
+
+```js
+if (typeof window.ethereum !== "undefined") {
+  // 判断是否为 MetaMask 钱包
+  if (window.ethereum.isMetaMask) {
+    // 是 MetaMask 钱包
+  }
+
+  // 判断是否为 Trust Wallet 钱包
+  if (window.ethereum.isTrust || window.trustWallet) {
+    // 是 Trust 钱包
+  }
+}
+```
+
+## 授权指定钱包
+
+根据前面的知识，授权钱包，只需要 `BrowserProvider` 传入 `window.ethereum` 即可。
+
+但是不管有多少个钱包，都只会有一个 `window.ethereum`，没有办法调起指定钱包。
+
+```js
+const provider = new ethers.BrowserProvider(window.ethereum);
+
+await provider.send("eth_requestAccounts", []);
+```
+
+如果你安装多个钱包，点击下面尝试一下，它只会永远授权那一个钱包，无法指定授权哪个钱包。
+
+import RequestAccounts from "./components/RequestAccounts";
+
+<RequestAccounts />
+
+### EIP-6963 事件
+
+`EIP-6963`（多注入提供者发现，`Multi Injected Provider Discovery`）是一个以太坊改进提案，旨在解决浏览器环境中多个钱包扩展（如 `MetaMask`、`Trust` 钱包等）共存时，因竞争注入 `window.ethereum` 对象而导致的冲突问题。它通过引入基于 JavaScript 窗口事件（`window events`）的标准机制，允许 DApp（去中心化应用）发现和交互多个注入的以太坊提供者（`EIP-1193 提供者`），从而提升用户体验并降低新钱包进入的门槛。
+
+**EIP-6963 定义了两个主要事件，用于在 DApp 和钱包之间建立双向通信：**
+
+- `eip6963:requestProvider 事件`：
+  - **作用**：由 DApp 触发，通知浏览器中安装的所有支持 EIP-6963 的钱包扩展，请求它们“宣布”自己的存在。
+  - **用法**：DApp 通过 window.dispatchEvent(new Event("eip6963:requestProvider")) 发出此事件，提示钱包响应。
+- `eip6963:announceProvider 事件`：
+  - **作用**：由钱包扩展触发，作为对 `eip6963:requestProvider` 的响应，宣布其提供者的存在及其元数据。
+  - **返回**`：EIP6963ProviderDetail` 包括：
+    - **info**：钱包元数据（如 `uuid`、名称 `name`、图标 `icon`、反向域名 `rdns`）。
+    - **provider**：符合 `EIP-1193` 标准的以太坊提供者对象，用于与 DApp 交互。
+
+`EIP-6963` 的存在就是为了解决 `window.ethereum` 问题。
+
+#### 1. 告知浏览器，当前页面需要使用 `EIP-6963`
+
+```js
+// 通知浏览器钱包，当前页面需要使用 EIP-6963， 请将数据传给我
+window.dispatchEvent(new Event("eip6963:requestProvider"));
+```
+
+#### 2. 监听 `EIP-6963` 事件
+
+```js
+const handleProvider = (event: any) => {
+  const { info, provider } = event.detail;
+  console.log("info", info);
+  // icon: data:image/svg+xml;base64,PHN2Z.....
+  // name: MetaMask
+  // rdns: io.metamask
+  // uuid: 519a8244-e3b4-4c93-81c9-73f4dd8121d8
+
+  console.log("provider", provider);
+  // provider 标准的 EIP-1193 提供者对象，用于与 DApp 交互
+};
+
+window.addEventListener("eip6963:announceProvider", handleProvider);
+```
+
+#### 3. 判断 name 获取指定 Provider
+
+有了信息就可以通过 `name` 拿到 Provider 了
+
+```js
+const handleProvider = (event: any) => {
+  const { info, provider } = event.detail;
+
+  if (info.name === "MetaMask") {
+    // 授权 MetaMask 钱包
+    const metaProvider = new ethers.BrowserProvider(provider);
+    await metaProvider.send("eth_requestAccounts", []);
+  }
+};
+```
+
+## 最终效果
+
+点击下面尝试一下
+
+import MultipleWallets from "./components/MultipleWallets";
+
+<MultipleWallets />
+
+## 总结
+
+本篇教程介绍了在浏览器环境下如何判断和区分多个主流钱包的安装情况，以及如何通过 `EIP-6963` 标准发现和选择指定钱包进行授权。传统方式只能操作 `window.ethereum`，无法指定具体钱包，而 `EIP-6963` 通过事件机制让 DApp 能够发现所有支持该标准的钱包，并按需与之交互。掌握这些方法可以让你的 DApp 更好地适配多钱包场景，提升用户体验。
+
+本章所有示例代码，均可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/tree/main/docs/advanced/multipleWallets/components) 中找到。

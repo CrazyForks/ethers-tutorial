@@ -1,0 +1,50 @@
+---
+sidebar_position: 3
+title: 将钱包连接到网络
+---
+
+# 将钱包连接到网络（provider）
+
+钱包本身无法读取区块链上的数据，需要连接 `provider` 才能发交易或交互。
+
+可以在 `MetaMask` 钱包中找到私钥。
+
+```js
+import { JsonRpcProvider, Wallet } from "ethers";
+
+const provider = new JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+const wallet = new Wallet("你的钱包私钥", provider);
+```
+
+此时 `wallet` 就是一个 `Signer`，可以发送交易、调用合约等
+
+### 查询钱包余额
+
+```js
+import { ethers, JsonRpcProvider, Wallet } from "ethers";
+
+const provider = new JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+const wallet = new Wallet("你的钱包私钥", provider);
+
+// 查询钱包余额
+const balance = await wallet.getBalance(wallet.address);
+console.log(ethers.formatEther(balance));
+```
+
+import ConnectWalletProvider from "./components/ConnectWalletProvider";
+
+<ConnectWalletProvider />
+
+## 总结
+
+本章介绍了如何通过 ethers.js 将钱包连接到区块链网络，包括：
+
+- 使用 `JsonRpcProvider` 创建 provider 实例；
+- 通过私钥和 provider 创建钱包（Wallet）对象；
+- 查询钱包余额的基本方法。
+
+本章所有示例代码，均可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/tree/main/docs/wallet/components) 中找到。
