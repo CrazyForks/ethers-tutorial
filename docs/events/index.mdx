@@ -52,7 +52,7 @@ const tokenABI = [
 const contract = new ethers.Contract(tokenAddress, tokenABI, wallet);
 
 // 监听 Transfer 事件
-contract.on("Transfer", (from, to, value) => {
+contract.on("Transfer", (from, to, value, event) => {
   console.log(`转账事件:`);
   console.log(`- 发送者: ${from}`);
   console.log(`- 接收者: ${to}`);
@@ -165,6 +165,10 @@ contract.on(filterFrom, (from, to, value) => {
   console.log(`转出代币: 转给 ${to} ${value} 代币`);
 });
 ```
+
+import EventListeners from "./EventListeners";
+
+<EventListeners />
 
 ## 总结
 

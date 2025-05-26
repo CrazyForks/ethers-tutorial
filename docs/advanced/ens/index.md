@@ -68,7 +68,7 @@ const balance2 = await provider.getBalance(
 
 搜索需要注册的 `ENS` 域名，例如 `xiejiahe`，显示可注册。
 
-![](./img/3.png)
+![](./img/4.png)
 
 支付一年 `Gas` 费用
 

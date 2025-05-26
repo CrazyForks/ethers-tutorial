@@ -14,11 +14,13 @@ function HomepageHeader() {
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
+        <img src="/img/eth.webp" alt="Ethers.js" draggable={false} />
+
         <Heading as="h1" className={styles.hero__title}>
           {siteConfig.title}
         </Heading>
         <p className={styles.hero__subtitle}>
-          最详细的 Ethers.js WEB3 入门教程
+          最详细的 Ethers.js web3 入门教程
         </p>
         <div className={styles.buttons}>
           <Link to="/docs/basic/">开始学习</Link>
