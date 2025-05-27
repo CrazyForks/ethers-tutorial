@@ -44,6 +44,8 @@
 
 **第二章：** [流行钱包 - 判断安装与授权](./docs/advanced/multipleWallets/index.mdx)
 
+**第三章：** [处理输入安全](./docs/advanced/security/index.mdx)
+
 ### 实战
 
 **第一章：** [dApp - 编写简易 dApp 应用](./docs/combat/dApp/index.mdx)

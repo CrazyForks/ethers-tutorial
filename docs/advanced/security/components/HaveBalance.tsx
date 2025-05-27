@@ -4,39 +4,40 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 import { ethers } from "ethers";
-import { Button, notification, Modal, Form, Input } from "antd";
+import { Button, notification, Modal, Form, Input, InputNumber } from "antd";
 
 const RPC = "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5";
-const blockNumber = "22528944";
 
-const Component: React.FC = () => {
+const SendTransaction: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  // 查询余额
   async function handleOk() {
     setLoading(true);
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      if (!values.blockNumber) {
-        return;
-      }
-
       const provider = new ethers.JsonRpcProvider(values.RPC);
+      const balance = await provider.getBalance(values.address);
 
-      const block = await provider.getBlock(BigInt(values.blockNumber), true);
-      notification.success({
-        duration: 0,
-        message: "区块链网络信息：",
-        description: (
-          <>
-            <pre>{JSON.stringify(block, null, 2)}</pre>
-          </>
-        ),
-      });
+      const inputBalance = ethers.parseEther(String(values.eth));
+      console.log(inputBalance, balance);
 
-      handleCancel();
+      if (inputBalance > balance) {
+        notification.error({
+          duration: 0,
+          message: "余额不足",
+          description: `当前余额：${ethers.formatEther(balance)} ETH`,
+        });
+      } else {
+        notification.success({
+          duration: 0,
+          message: "余额充足",
+          description: `当前余额：${ethers.formatEther(balance)} ETH`,
+        });
+      }
     } catch (error: any) {
       notification.error({
         duration: 0,
@@ -58,7 +59,7 @@ const Component: React.FC = () => {
   return (
     <>
       <Modal
-        title="查询区块链网络信息"
+        title="测试钱包余额是否足够 ETH"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -75,26 +76,35 @@ const Component: React.FC = () => {
             initialValue={RPC}
             label="RPC地址"
             name="RPC"
-            rules={[{ message: "请输入提供商的测试RPC" }]}
+            rules={[{ required: true, message: "请输入提供商的测试RPC" }]}
           >
             <Input placeholder="请输入提供商的测试RPC" />
           </Form.Item>
 
           <Form.Item
-            initialValue={blockNumber}
-            label="区块高度"
-            name="blockNumber"
-            rules={[{ message: "请输入区块高度" }]}
+            initialValue={"0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"}
+            label="钱包地址"
+            name="address"
+            rules={[{ required: true, message: "请输入钱包地址" }]}
           >
-            <Input placeholder="请输入区块高度" />
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            initialValue={100}
+            label="ETH"
+            name="eth"
+            rules={[{ required: true, message: "请输入要检测的 ETH 数量" }]}
+          >
+            <InputNumber min={0.00000001} style={{ width: "100%" }} />
           </Form.Item>
         </Form>
       </Modal>
       <Button type="primary" onClick={showModal} loading={loading}>
-        查询区块链网络信息 getBlock
+        测试一下
       </Button>
     </>
   );
 };
 
-export default Component;
+export default SendTransaction;

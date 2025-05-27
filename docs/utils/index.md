@@ -15,13 +15,20 @@
 
 常见单位：
 
-- `wei`：`1` 以太坊的最小单位，所有交易以 wei 计算。
-- `kwei`：`10^3` 也称为 `babbage`，较少使用。
-- `mwei`：`10^6` 也称为 `lovelace`，较少使用。
-- `gwei`：`10^9` 常用作 Gas 价格单位（1 gwei = 10^9 wei）。
-- `szabo`：`10^12` 也称为 `microether`，较少使用。
-- `finney`：`10^15` 也称为 `millieter`，较少使用。
-- `ether`：`10^18` 以太坊的主要单位，`1 ETH = 10^18 wei`。
+- `wei`：以太坊的最小单位。
+  - 换算：1 Ether = 10^18 wei（即 1,000,000,000,000,000,000 wei）。
+- `kwei`：Kwei 是以太坊的次小单位，等于 **1,000** wei。
+  - 换算：1 Ether = 10^15 Kwei。
+- `mwei`：Mwei 是更大的单位，等于 **1,000,000** wei（10^6 wei）。
+  - 换算：1 Ether = 10^12 Mwei。
+- `gwei`：Gwei 是以太坊中非常常用的单位，主要用于 Gas 费用，等于 10^9 wei（**1,000,000,000** wei）。
+  - 换算：1 Ether = 10^9 Gwei。
+- `szabo`：Szabo 等于 10^12 wei（**1,000,000,000,000** wei）。
+  - 换算：1 Ether = 10^6 Szabo。
+- `finney`：Finney 等于 10^15 wei（**1,000,000,000,000,000** wei）。
+  - 换算：1 Ether = 10^3 Finney。
+- `ether`：Ether 是以太坊的主要货币单位，等于 10^18 wei。
+  - 换算：1 Ether = 10^18 wei = 10^9 Gwei = 10^6 Szabo = 10^3 Finney。
 
 ```js
 // 将 1.5 ETH 转换为 gwei 单位
@@ -31,6 +38,10 @@ const value = ethers.parseUnits("1.5", "gwei");
 const value = ethers.parseUnits("1.5", 9);
 // 1500000000n
 ```
+
+import ParseUnits from "./ParseUnits";
+
+<ParseUnits />
 
 ## parseEther
 
@@ -47,6 +58,10 @@ const value = ethers.parseEther("1.5");
 // 1500000000000000000n
 ```
 
+import ParseEther from "./ParseEther";
+
+<ParseEther />
+
 ## formatUnits
 
 `parseUnits` 的相反操作，将以最小单位为单位的 `bigint` 转换为指定小数位数的`字符串`。
@@ -62,6 +77,10 @@ const value = ethers.formatUnits(1500000000000000000n, 18);
 // 1.5
 ```
 
+import FormatUnits from "./FormatUnits";
+
+<FormatUnits />
+
 ## formatEther
 
 将 `wei` 单位转换为 `ETH` 单位。
@@ -73,6 +92,10 @@ const value = ethers.formatEther(1500000000000000000n);
 // 1.5
 ```
 
+import FormatEther from "./FormatEther";
+
+<FormatEther />
+
 # 判断
 
 ## isAddress
@@ -83,6 +106,10 @@ const value = ethers.formatEther(1500000000000000000n);
 ethers.isAddress("0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"); // true
 ethers.isAddress("0x"); // false
 ```
+
+import IsAddress from "./IsAddress";
+
+<IsAddress />
 
 ## isError
 
@@ -189,6 +216,10 @@ console.log(isHexString(undefined)); // false
 - `字节码 (Bytecode)`：合约编译后的代码。
 - `数据 (Data)`：例如在调用合约方法时传递的参数。
 
+import IsHexString from "./IsHexString";
+
+<IsHexString />
+
 # 哈希与加密
 
 ## keccak256
@@ -210,6 +241,10 @@ const value2 = keccak256(new Uint8Array([0x13, 0x37]));
 console.log(value2); // 0x2636a8beb2c41b8ccafa9a55a5a5e333892a83b491df3a67d2768946a9f9c6dc
 ```
 
+import Keccak256 from "./Keccak256";
+
+<Keccak256 />
+
 ## id
 
 这是一个语法糖，实际上调用 `keccak256(value)`
@@ -225,6 +260,10 @@ import { keccak256, toUtf8Bytes } from "ethers";
 const value = keccak256(toUtf8Bytes("Hello World"));
 console.log(value); // 0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba
 ```
+
+import Id from "./Id";
+
+<Id />
 
 ## sha256
 
@@ -247,6 +286,10 @@ const value2 = sha256(new Uint8Array([0x13, 0x37]));
 console.log(value2); // 0x158760c856e5ea1ba97e2e2a456736c4bf30d964559afa6d748cf05694a636ff
 ```
 
+import Sha256 from "./Sha256";
+
+<Sha256 />
+
 # 数据编码/解码
 
 ## encodeBase64
@@ -265,6 +308,10 @@ const value2 = encodeBase64(new Uint8Array([0x13, 0x37]));
 console.log(value2); // Ezc=
 ```
 
+import EncodeBase64 from "./EncodeBase64";
+
+<EncodeBase64 />
+
 ## decodeBase64
 
 与 `encodeBase64` 相反，用于解码 base64
@@ -279,9 +326,13 @@ console.log(value);
 // Uint8Array(11) [72, 101, 108, 108, 111,  32,  87, 111, 114, 108, 100]
 ```
 
+import DecodeBase64 from "./DecodeBase64";
+
+<DecodeBase64 />
+
 ## getBytes
 
-`getBytes` 函数的主要功能是将输入的字符串、数组、或十六进制字符串等数据转换为标准化的 `Uint8Array` `格式。Uint8Array` 是一种 JavaScript 类型化数组，表示 8 位无符号整数数组，常用于处理二进制数据或字节数据。在以太坊开发中，字节数据广泛用于处理交易、签名、哈希、编码等操作，因此 `getBytes` 是一个非常核心的工具函数。
+`getBytes` 函数的主要功能是将输入的十六进制字符串等数据转换为标准化的 `Uint8Array` 格式。`Uint8Array` 是一种 JavaScript 类型化数组，表示 8 位无符号整数数组，常用于处理二进制数据或字节数据。在以太坊开发中，字节数据广泛用于处理交易、签名、哈希、编码等操作，因此 `getBytes` 是一个非常核心的工具函数。
 
 `function getBytes(value: BytesLike, name?: string): Uint8Array`
 
@@ -304,6 +355,10 @@ try {
   console.log(error.argument); // hello
 }
 ```
+
+import GetBytes from "./GetBytes";
+
+<GetBytes />
 
 ## toUtf8Bytes
 
@@ -333,6 +388,10 @@ console.log(
     toUtf8Bytes("\u006E\u0303", "NFC").toString()
 ); // true
 ```
+
+import ToUtf8Bytes from "./ToUtf8Bytes";
+
+<ToUtf8Bytes />
 
 ## toUtf8String
 
@@ -367,6 +426,10 @@ const value3 = toUtf8String(
 console.log(value3); // 输出: "Hello"（跳过了无效字节）
 ```
 
+import ToUtf8String from "./ToUtf8String";
+
+<ToUtf8String />
+
 # 随机数与格式化
 
 ## randomBytes
@@ -391,6 +454,10 @@ console.log(value);
 // Uint8Array(10) [4, 199,  59, 204, 6, 199, 123, 137, 143, 155]
 ```
 
+import RandomBytes from "./RandomBytes";
+
+<RandomBytes />
+
 ## hexlify
 
 将输入的数据转换为以 `"0x"` 开头的十六进制字符串，这是以太坊区块链中常用的数据表示格式。十六进制字符串在以太坊中广泛用于表示地址、交易数据、签名、哈希值等。
@@ -408,6 +475,10 @@ console.log(value); // 0x592fa7
 const value2 = hexlify(new Uint8Array([89, 47, 167]));
 console.log(value2); // 0x592fa7
 ```
+
+import Hexlify from "./Hexlify";
+
+<Hexlify />
 
 ## zeroPadValue
 
@@ -428,13 +499,9 @@ const value2 = zeroPadValue("0x592fa7", 6);
 console.log(value2); // 0x000000592fa7
 ```
 
-## 运行
+import ZeroPadValue from "./ZeroPadValue";
 
-以上所有示例代码可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/tree/main/docs/utils) 上找到，运行请先安装 `npm i tsx -g`
-
-```bash
-$ tsx formatEther.ts
-```
+<ZeroPadValue />
 
 ## 总结
 

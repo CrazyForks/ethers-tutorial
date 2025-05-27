@@ -57,7 +57,6 @@ const ConnectWalletProvider: React.FC = () => {
         <Form
           form={form}
           preserve={false}
-          name="form"
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 20 }}
           autoComplete="off"

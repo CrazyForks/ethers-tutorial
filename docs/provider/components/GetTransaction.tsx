@@ -68,7 +68,6 @@ const Component: React.FC = () => {
         <Form
           form={form}
           preserve={false}
-          name="form"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 20 }}
           autoComplete="off"

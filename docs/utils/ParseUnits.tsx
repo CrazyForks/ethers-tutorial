@@ -6,37 +6,30 @@ import React from "react";
 import { ethers } from "ethers";
 import { Button, notification, Modal, Form, Input } from "antd";
 
-const RPC = "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5";
-const blockNumber = "22528944";
-
 const Component: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
 
   async function handleOk() {
-    setLoading(true);
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      if (!values.blockNumber) {
-        return;
+      let unit = values.unit || undefined;
+      if (!isNaN(Number(unit))) {
+        unit = Number(unit);
       }
 
-      const provider = new ethers.JsonRpcProvider(values.RPC);
+      const value = ethers.parseUnits(values.value, unit);
 
-      const block = await provider.getBlock(BigInt(values.blockNumber), true);
       notification.success({
         duration: 0,
-        message: "区块链网络信息：",
+        message: "结果",
         description: (
           <>
-            <pre>{JSON.stringify(block, null, 2)}</pre>
+            <div>{value.toString()}</div>
           </>
         ),
       });
-
-      handleCancel();
     } catch (error: any) {
       notification.error({
         duration: 0,
@@ -44,7 +37,6 @@ const Component: React.FC = () => {
         description: error.message,
       });
     }
-    setLoading(false);
   }
 
   const showModal = () => {
@@ -58,11 +50,10 @@ const Component: React.FC = () => {
   return (
     <>
       <Modal
-        title="查询区块链网络信息"
+        title="parseUnits"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        confirmLoading={loading}
       >
         <Form
           form={form}
@@ -71,27 +62,17 @@ const Component: React.FC = () => {
           wrapperCol={{ span: 20 }}
           autoComplete="off"
         >
-          <Form.Item
-            initialValue={RPC}
-            label="RPC地址"
-            name="RPC"
-            rules={[{ message: "请输入提供商的测试RPC" }]}
-          >
-            <Input placeholder="请输入提供商的测试RPC" />
+          <Form.Item initialValue="1" label="数值" name="value">
+            <Input placeholder="请输入数值" />
           </Form.Item>
 
-          <Form.Item
-            initialValue={blockNumber}
-            label="区块高度"
-            name="blockNumber"
-            rules={[{ message: "请输入区块高度" }]}
-          >
-            <Input placeholder="请输入区块高度" />
+          <Form.Item initialValue="8" label="单位" name="unit">
+            <Input placeholder="请输入单位" />
           </Form.Item>
         </Form>
       </Modal>
-      <Button type="primary" onClick={showModal} loading={loading}>
-        查询区块链网络信息 getBlock
+      <Button type="primary" onClick={showModal}>
+        parseUnits
       </Button>
     </>
   );

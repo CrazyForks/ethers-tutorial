@@ -52,13 +52,12 @@
       "last 5 safari version"
     ]
   },
-  "description": "## 目录",
-  "main": "index.js",
+  "description": "Ethers.js Beginner's Tutorial",
   "directories": {
     "doc": "docs"
   },
   "keywords": [],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/xjh22222228/ethers-tutorial/issues"
   }

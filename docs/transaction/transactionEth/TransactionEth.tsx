@@ -124,7 +124,6 @@ const SendTransaction: React.FC = () => {
         <Form
           form={form}
           preserve={false}
-          name="form"
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 20 }}
           autoComplete="off"
@@ -161,12 +160,7 @@ const SendTransaction: React.FC = () => {
             name="amount"
             rules={[{ required: true, message: "请输入要转账的 ETH 数量" }]}
           >
-            <InputNumber
-              placeholder="请输入要转账的地址"
-              min={0.01}
-              max={1}
-              step={0.01}
-            />
+            <InputNumber min={0.01} max={1} step={0.01} />
           </Form.Item>
         </Form>
       </Modal>
