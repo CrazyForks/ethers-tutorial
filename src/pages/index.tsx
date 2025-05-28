@@ -1,3 +1,4 @@
+import React from "react";
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -47,6 +48,14 @@ function HomepageHeader() {
 
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
+
+  React.useEffect(() => {
+    // @ts-ignore
+    if (window.LA) {
+      // @ts-ignore
+      window.LA.init({ id: "3MJvRzZFC8VW03Qw", ck: "3MJvRzZFC8VW03Qw" });
+    }
+  }, []);
 
   return (
     <Layout

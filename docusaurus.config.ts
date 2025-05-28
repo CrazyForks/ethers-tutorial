@@ -8,7 +8,13 @@ import "dotenv/config";
 const config: Config = {
   title: "Ethers.js 教程",
   favicon: "img/favicon.ico",
-
+  scripts: [
+    {
+      src: "//sdk.51.la/js-sdk-pro.min.js",
+      async: true,
+      defer: true,
+    },
+  ],
   // Set the production url of your site here
   url: "https://ethersjs.cn",
   // Set the /<baseUrl>/ pathname under which your site is served
