@@ -3,6 +3,11 @@
  * and scoped locally.
  */
 
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
 .heroBanner {
   padding: 1rem 0 4rem 0;
   text-align: center;
@@ -12,9 +17,6 @@
 }
 
 @media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
 }
 
 .hero__title {

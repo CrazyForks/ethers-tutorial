@@ -6,7 +6,7 @@ import React from "react";
 import { ethers } from "ethers";
 import { Button, notification, Modal, Form, Input } from "antd";
 
-const Component: React.FC = () => {
+const Component: React.FC = ({ buttonText }) => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -67,7 +67,7 @@ const Component: React.FC = () => {
         </Form>
       </Modal>
       <Button type="primary" onClick={showModal}>
-        isAddress
+        {buttonText || "isAddress"}
       </Button>
     </>
   );

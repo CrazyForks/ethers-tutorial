@@ -3,29 +3,27 @@
  *  Licensed under the MIT License. See License in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
-import { ethers } from "ethers";
+import { getAddress } from "ethers";
 import { Button, notification, Modal, Form, Input } from "antd";
 
-const RPC = "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5";
-
-const SendTransaction: React.FC = () => {
+const Component: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
 
-  // 查询余额
   async function handleOk() {
-    setLoading(true);
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      const provider = new ethers.JsonRpcProvider(values.RPC);
-      const code = await provider.getCode(values.contractAddress);
+      const value = getAddress(values.value);
 
       notification.success({
         duration: 0,
-        message: code === "0x" ? "合约不存在" : "是合约",
-        description: code,
+        message: "结果",
+        description: (
+          <>
+            <div>{value}</div>
+          </>
+        ),
       });
     } catch (error: any) {
       notification.error({
@@ -34,7 +32,6 @@ const SendTransaction: React.FC = () => {
         description: error.message,
       });
     }
-    setLoading(false);
   }
 
   const showModal = () => {
@@ -48,11 +45,10 @@ const SendTransaction: React.FC = () => {
   return (
     <>
       <Modal
-        title="测试合约地址"
+        title="规范化地址"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        confirmLoading={loading}
       >
         <Form
           form={form}
@@ -62,29 +58,19 @@ const SendTransaction: React.FC = () => {
           autoComplete="off"
         >
           <Form.Item
-            initialValue={RPC}
-            label="RPC地址"
-            name="RPC"
-            rules={[{ required: true, message: "请输入提供商的测试RPC" }]}
+            initialValue="0x8ba1f109551bd432803012645ac136ddd64dba72"
+            label="输入值"
+            name="value"
           >
-            <Input placeholder="请输入提供商的测试RPC" />
-          </Form.Item>
-
-          <Form.Item
-            initialValue={"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"}
-            label="合约地址"
-            name="contractAddress"
-            rules={[{ required: true, message: "请输入合约代币地址" }]}
-          >
-            <Input placeholder="请输入合约代币地址" />
+            <Input />
           </Form.Item>
         </Form>
       </Modal>
-      <Button type="primary" onClick={showModal} loading={loading}>
+      <Button type="primary" onClick={showModal}>
         测试一下
       </Button>
     </>
   );
 };
 
-export default SendTransaction;
+export default Component;

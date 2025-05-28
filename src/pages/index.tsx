@@ -1,6 +1,4 @@
 import type { ReactNode } from "react";
-import { useEffect } from "react";
-import { useHistory } from "@docusaurus/router";
 import clsx from "clsx";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
@@ -13,7 +11,7 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
-      <div className="container">
+      <div className={styles.container}>
         <img src="/img/eth.webp" alt="Ethers.js" draggable={false} />
 
         <Heading as="h1" className={styles.hero__title}>
@@ -49,7 +47,6 @@ function HomepageHeader() {
 
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
-  const history = useHistory();
 
   return (
     <Layout

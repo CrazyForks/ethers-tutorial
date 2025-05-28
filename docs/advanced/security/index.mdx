@@ -32,7 +32,7 @@
 ### 验证地址格式，是否是以太坊有效地址
 
 ```js
-const { ethers } = require("ethers");
+import { ethers } from "ethers";
 function isValidAddress(address) {
   return ethers.isAddress(address);
 }
@@ -42,14 +42,26 @@ if (!isValidAddress(userInputAddress)) {
 }
 ```
 
+import IsAddress from "../../utils/IsAddress.tsx";
+
+<IsAddress buttonText="测试一下" />
+
 ### 检查地址类型：使用 getAddress 规范化地址，防止大小写混淆。
+
+以太坊地址本质是 160 位哈希值的十六进制字符串，但书写时可能有不同格式（如大小写、前缀）。`getAddress` 会将地址统一转换为 **EIP-55** 校验的大小写混合格式
 
 ```js
 const normalizedAddress = ethers.getAddress(userInputAddress);
 console.log("地址:", normalizedAddress);
 ```
 
+import GetAddress from "./components/GetAddress.tsx";
+
+<GetAddress />
+
 ### 检查是否是空地址
+
+避免零地址：检查是否为零地址（`0x000...`），因为它通常无效。
 
 空地址表示 `0x0000000000000000000000000000000000000000`，`ZeroAddress` 常量表示空地址。
 
@@ -59,7 +71,9 @@ if ("输入值" === ethers.ZeroAddress) {
 }
 ```
 
-### 检查合约地址：如果输入是合约地址，验证其是否为有效合约（包含字节码）。
+### 检查合约地址
+
+如果输入是合约地址，验证其是否为有效合约（包含字节码）。
 
 ```js
 async function isContract(provider, address) {
@@ -93,6 +107,14 @@ if (inputBalance > balance) {
 import HaveBalance from "./components/HaveBalance";
 
 <HaveBalance />
+
+### 非法字符处理
+
+防止跨站脚本攻击，如果你的应用是去中心化留言相关，需要处理特殊字符，转换或者过滤掉。
+
+```js
+const value = "非法字符输入".replace(/[<>{}]/g, "");
+```
 
 ## 总结
 
