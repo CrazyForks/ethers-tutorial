@@ -54,6 +54,8 @@
 
 [水龙头](./docs/other/faucet/index.md)
 
+[手续费](./docs/other/gas/index.md)
+
 正在编写中...
 
 ## 在线阅读
