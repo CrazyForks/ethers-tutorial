@@ -8,13 +8,13 @@ import { Button, notification, Modal, Form, Input, InputNumber } from "antd";
 
 const RPC = "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5";
 
-const SendTransaction: React.FC = () => {
+const Component: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   // 查询余额
-  async function sendETHTransaction() {
+  async function handleOk() {
     setLoading(true);
     notification.destroy();
     try {
@@ -117,7 +117,7 @@ const SendTransaction: React.FC = () => {
         title="转账ETH"
         okText={loading ? "确认中..." : "转账"}
         open={isModalOpen}
-        onOk={sendETHTransaction}
+        onOk={handleOk}
         onCancel={handleCancel}
         confirmLoading={loading}
       >
@@ -171,4 +171,4 @@ const SendTransaction: React.FC = () => {
   );
 };
 
-export default SendTransaction;
+export default Component;

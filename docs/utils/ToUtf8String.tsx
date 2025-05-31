@@ -14,7 +14,11 @@ const Component: React.FC = () => {
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      const value = ethers.toUtf8String(values.address);
+      const value = ethers.toUtf8String(
+        values.value.includes("new Uint8Array")
+          ? eval(values.value)
+          : values.value
+      );
 
       notification.success({
         duration: 0,
@@ -57,7 +61,7 @@ const Component: React.FC = () => {
           wrapperCol={{ span: 20 }}
           autoComplete="off"
         >
-          <Form.Item initialValue="0x48656c6c6f" label="输入" name="address">
+          <Form.Item initialValue="0x48656c6c6f" label="输入" name="value">
             <Input />
           </Form.Item>
         </Form>

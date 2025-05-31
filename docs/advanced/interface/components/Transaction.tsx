@@ -6,7 +6,10 @@ import React from "react";
 import { ethers } from "ethers";
 import { Button, notification, Modal, Form, Input, InputNumber } from "antd";
 
-const address = "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d";
+const abi = [
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "event Transfer(address indexed from, address indexed to, uint256 amount)",
+];
 
 const Component: React.FC = () => {
   const [form] = Form.useForm();
@@ -30,14 +33,16 @@ const Component: React.FC = () => {
         });
 
         // 获取 signer
-        const signer = await provider.getSigner(address);
-
+        const signer = await provider.getSigner();
+        const iface = new ethers.Interface(abi);
+        const data = iface.encodeFunctionData("transfer", [
+          values.address,
+          ethers.parseUnits(String(values.eth), 6),
+        ]);
         const tx = await signer.sendTransaction({
-          // 转账地址
-          to: values.address,
-
-          // 转账数量，解析成 wei 单位
-          value: ethers.parseEther(String(values.eth)),
+          // 合约地址
+          to: values.contractAddress,
+          data,
         });
         notification.success({
           duration: 0,
@@ -58,6 +63,8 @@ const Component: React.FC = () => {
 
       handleCancel();
     } catch (error: any) {
+      console.log("error", error);
+      console.log("error:data", error.data);
       notification.error({
         duration: 0,
         message: "Error",
@@ -93,25 +100,32 @@ const Component: React.FC = () => {
           autoComplete="off"
         >
           <Form.Item
-            label="接收地址"
-            name="address"
-            initialValue="0x817c6ef5f2ef3cc56ce87942bf7ed74138ec284c"
+            label="合约地址"
+            name="contractAddress"
+            initialValue="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
           >
-            <Input placeholder="请输入接收地址" />
+            <Input placeholder="请输入合约地址" />
           </Form.Item>
 
-          <Form.Item label="ETH 数量" name="eth" initialValue={0.00001}>
+          <Form.Item
+            label="转账给"
+            name="address"
+            initialValue="0x817C6Ef5f2EF3CC56ce87942BF7ed74138EC284C"
+          >
+            <Input placeholder="请输入转账地址" />
+          </Form.Item>
+
+          <Form.Item label="转账数量" name="eth" initialValue={0.00001}>
             <InputNumber
               style={{ width: "100%" }}
               min={0.00001}
-              max={1}
               step={0.00001}
             />
           </Form.Item>
         </Form>
       </Modal>
       <Button type="primary" onClick={showModal} loading={loading}>
-        使用 Signer 签名转账
+        测试一下
       </Button>
     </>
   );

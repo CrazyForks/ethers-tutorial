@@ -6,26 +6,38 @@ import React from "react";
 import { ethers } from "ethers";
 import { Button, notification, Modal, Form, Input } from "antd";
 
+const abi = `
+[
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "event Transfer(address indexed from, address indexed to, uint256 amount)",
+]
+`.trim();
+
+const value =
+  `0x0000000000000000000000000000000000000000000000000000000000000001`.trim();
+
 const Component: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   async function handleOk() {
+    setLoading(true);
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      const value = ethers.hexlify(
-        values.value.includes("new Uint8Array")
-          ? eval(values.value)
-          : values.value
+      const iface = new ethers.Interface(eval(values.abi));
+      const data = iface.decodeFunctionResult(
+        values.functionName,
+        values.value
       );
-
+      console.log(data);
       notification.success({
         duration: 0,
-        message: "结果",
+        message: "结果：",
         description: (
           <>
-            <div>{String(value)}</div>
+            <div>{String(data)}</div>
           </>
         ),
       });
@@ -36,6 +48,7 @@ const Component: React.FC = () => {
         description: error.message,
       });
     }
+    setLoading(false);
   }
 
   const showModal = () => {
@@ -49,10 +62,11 @@ const Component: React.FC = () => {
   return (
     <>
       <Modal
-        title="hexlify"
+        title="测试一下"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        confirmLoading={loading}
       >
         <Form
           form={form}
@@ -62,16 +76,40 @@ const Component: React.FC = () => {
           autoComplete="off"
         >
           <Form.Item
-            initialValue="new Uint8Array([89, 47, 167])"
-            label="输入"
-            name="value"
+            initialValue={abi}
+            label="ABI"
+            name="abi"
+            rules={[{ required: true, message: "请输入ABI" }]}
           >
-            <Input />
+            <Input.TextArea placeholder="请输入ABI" autoSize={{ minRows: 6 }} />
+          </Form.Item>
+
+          <Form.Item
+            initialValue="transfer"
+            label="函数名"
+            name="functionName"
+            rules={[{ required: true, message: "请输入函数名" }]}
+          >
+            <Input placeholder="请输入函数名" />
+          </Form.Item>
+
+          <Form.Item
+            initialValue={value}
+            label="参数"
+            name="value"
+            rules={[{ required: true, message: "请输入参数" }]}
+          >
+            <Input placeholder="请输入参数" />
           </Form.Item>
         </Form>
       </Modal>
-      <Button type="primary" onClick={showModal}>
-        hexlify
+      <Button
+        className="mb-20"
+        type="primary"
+        onClick={showModal}
+        loading={loading}
+      >
+        测试一下
       </Button>
     </>
   );

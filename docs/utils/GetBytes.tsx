@@ -15,7 +15,12 @@ const Component: React.FC = () => {
     try {
       const values = await form.getFieldsValue();
 
-      const value = getBytes(values.value, values.name || undefined);
+      const value = getBytes(
+        values.value.includes("new Uint8Array")
+          ? eval(values.value)
+          : values.value,
+        values.name || undefined
+      );
 
       notification.success({
         duration: 0,

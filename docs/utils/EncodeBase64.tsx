@@ -14,7 +14,11 @@ const Component: React.FC = () => {
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      const value = encodeBase64(toUtf8Bytes(values.value));
+      const value = encodeBase64(
+        values.value.includes("new Uint8Array")
+          ? eval(values.value)
+          : toUtf8Bytes(values.value)
+      );
 
       notification.success({
         duration: 0,
