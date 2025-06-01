@@ -40,11 +40,13 @@
 
 ### 进阶
 
-**第一章：** [ENS - 注册属于自己的 ENS 域名](./docs/advanced/ens/index.md)
+**第一章：** [Interface 类 - Interface 常用操作](./docs/advanced/interface/index.mdx)
 
-**第二章：** [流行钱包 - 判断安装与授权](./docs/advanced/multipleWallets/index.mdx)
+**第二章：** [ENS - 注册属于自己的 ENS 域名](./docs/advanced/ens/index.md)
 
-**第三章：** [处理输入安全](./docs/advanced/security/index.mdx)
+**第三章：** [流行钱包 - 判断安装与授权](./docs/advanced/multipleWallets/index.mdx)
+
+**第四章：** [处理输入安全](./docs/advanced/security/index.mdx)
 
 ### 实战
 
@@ -54,7 +56,7 @@
 
 [水龙头](./docs/other/faucet/index.md)
 
-[手续费](./docs/other/gas/index.md)
+[Gas 手续费](./docs/other/gas/index.md)
 
 正在编写中...
 
@@ -72,9 +74,9 @@ $ pnpm i
 $ npm run start
 ```
 
-## 交流
+<!-- ## 交流
 
-<img src="./media/qq.jpg" width="300">
+<img src="./media/qq.jpg" width="300"> -->
 
 ## 支持
 
