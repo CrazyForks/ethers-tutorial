@@ -59,7 +59,7 @@ const config: Config = {
       title: "Ethers.js v6教程",
       logo: {
         alt: "My Site Logo",
-        src: "img/logo.svg",
+        src: "img/logo.png",
       },
       items: [
         {

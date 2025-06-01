@@ -1,4 +1,7 @@
-# Ethers.js v6 快速入门教程
+<p align="center">
+  <img src="./static/img/logo.png" width="350" />
+  <h1 align="center">Ethers.js v6 快速入门教程</h1>
+</p>
 
 ## 概述
 
