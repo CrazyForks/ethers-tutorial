@@ -44,7 +44,8 @@
 
 前往注册 [infura](https://www.infura.io/zh) 并得到 `API Key`。
 
-RPC: `https://sepolia.infura.io/v3/YOUR_API_KEY`
+- 测试网 RPC: `https://sepolia.infura.io/v3/YOUR_API_KEY`
+- 主网 RPC: `https://mainnet.infura.io/v3/YOUR_API_KEY`
 
 ## 教程用到的相关信息
 

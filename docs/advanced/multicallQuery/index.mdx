@@ -1,0 +1,465 @@
+# Multicall3 批量查询
+
+:::tip
+Multicall3 是用于批量查询的工具。它允许用户通过单个交易或调用，将多个智能合约的函数调用聚合在一起，从而减少链上交互的次数，提高效率并降低 gas 成本。
+:::
+
+具体来说，`Multicall3` 是由 `MakerDAO` 团队开发的一个智能合约，部署在以太坊主网及其兼容链上。它是 `Multicall` 和 `Multicall2` 的升级版，提供了更强大的功能，比如：
+
+- **批量调用**：可以在一次调用中执行多个合约的函数调用（call），并返回所有调用的结果。
+- **支持失败处理**：`Multicall3` 提供了 `tryAggregate` 和 `tryBlockAndAggregate` 等方法，允许用户选择是否忽略某些调用失败（例如，如果某个调用失败，不会导致整个批量调用失败）。
+- **Gas 优化**：通过减少多次单独调用的开销，`Multicall3` 显著降低了 gas 费用。
+- **支持返回值**：可以获取每个调用的返回值，方便开发者处理复杂的查询逻辑。
+
+**常用于**
+
+- **批量查询状态**：如查询多个 ERC-20 代币的余额或多个合约的状态。
+- **DApp 优化**：前端应用可以通过一次调用获取多个数据点，提升用户体验。
+- **链下数据聚合**：在 DeFi 或其他复杂应用中，批量获取合约数据以进行计算或展示。
+
+**Multicall3 合约地址**
+
+实际上是调用 `Multicall3` 部署的合约方法来批量查询数据。
+
+- `Multicall3` 合约地址（以太坊主网）：`0xcA11bde05977b3631167028862bE2a173976CA11`。
+- `Multicall3` 在 `Sepolia` 测试网上的合约地址是：`0xcA11bde05977b3631167028862bE2a173976CA11`。
+
+---
+
+## 批量查询 ERC-20 代币余额
+
+下面使用 `ethereum` 主网进行测试。
+
+### 1. 实例化 Provider 和 声明 multicallAbi
+
+```js
+const provider = new ethers.JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+
+const multicallAbi = [
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "aggregate",
+    outputs: [
+      { name: "blockNumber", type: "uint256" },
+      { name: "returnData", type: "bytes[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+```
+
+### 2. 实例化 multicallContract
+
+```js
+// Multicall 合约地址（以 Ethereum 主网为例）
+const multicallAddress = "0xca11bde05977b3631167028862be2a173976ca11"; // Multicall3
+
+// 实例化 multicallContract
+const multicallContract = new ethers.Contract(
+  multicallAddress,
+  multicallAbi,
+  provider
+);
+```
+
+### 3. 编码调用数据
+
+```js
+// 要批量读取的目标合约（例如 ERC20）
+const erc20Abi = ["function balanceOf(address owner) view returns (uint256)"];
+
+// 用户钱包地址
+const userAddress = "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d";
+
+// 编码调用数据
+const iface = new ethers.Interface(erc20Abi);
+const callData = iface.encodeFunctionData("balanceOf", [userAddress]);
+```
+
+### 4. 调用 multicallContract.aggregate 方法
+
+`target` 是目标合约地址，`callData` 是编码后的调用数据。
+
+```js
+const calls = [
+  // USDC 合约地址
+  { target: `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`, callData },
+
+  // BUSD 合约地址
+  { target: `0x4Fabb145d64652a948d72533023f6E7A623C7C53`, callData },
+];
+const result = await multicallContract.aggregate(calls);
+```
+
+### 5. 解码结果
+
+`returnData` 返回的是 `bytes[]` 类型，需要解码才能获取到具体的数值。
+
+```js
+// 解码结果
+const USDC_returnData = result.returnData[0];
+const BUSD_returnData = result.returnData[1];
+
+const USDC_balance = iface.decodeFunctionResult(
+  "balanceOf",
+  USDC_returnData
+)[0];
+const BUSD_balance = iface.decodeFunctionResult(
+  "balanceOf",
+  BUSD_returnData
+)[0];
+
+console.log("USDC余额：", USDC_balance); // 0n
+console.log("BUSD余额：", BUSD_balance); // 0n
+```
+
+### 完整代码
+
+```js
+const provider = new ethers.JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+
+const multicallAbi = [
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "aggregate",
+    outputs: [
+      { name: "blockNumber", type: "uint256" },
+      { name: "returnData", type: "bytes[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+// Multicall 合约地址（以 Ethereum 主网为例）
+const multicallAddress = "0xca11bde05977b3631167028862be2a173976ca11"; // Multicall3
+
+// 实例化 multicallContract
+const multicallContract = new ethers.Contract(
+  multicallAddress,
+  multicallAbi,
+  provider
+);
+
+// 要批量读取的目标合约（例如 ERC20）
+const erc20Abi = ["function balanceOf(address owner) view returns (uint256)"];
+const userAddress = "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"; // 用户地址
+
+// 编码调用数据
+const iface = new ethers.Interface(erc20Abi);
+const callData = iface.encodeFunctionData("balanceOf", [userAddress]);
+
+// 调用 multicall
+const calls = [
+  { target: `0xdAC17F958D2ee523a2206206994597C13D831ec7`, callData },
+  { target: `0x236501327e701692a281934230AF0b6BE8Df3353`, callData },
+];
+const result = await multicallContract.aggregate(calls);
+
+console.log("returnData：", result.returnData);
+
+// 解码结果
+const USDC_returnData = result.returnData[0];
+const BUSD_returnData = result.returnData[1];
+
+const USDC_balance = iface.decodeFunctionResult(
+  "balanceOf",
+  USDC_returnData
+)[0];
+const BUSD_balance = iface.decodeFunctionResult(
+  "balanceOf",
+  BUSD_returnData
+)[0];
+
+console.log("USDC余额：", USDC_balance);
+console.log("BUSD余额：", BUSD_balance);
+```
+
+由于我的代币没有余额，所以查出来是 `0`，只要能正常查询，说明代码没问题。
+
+import BalanceOf from "./components/BalanceOf";
+
+<BalanceOf />
+
+## Multicall3 完整 ABI
+
+```js
+export const multicall3Abi = [
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "aggregate",
+    outputs: [
+      { name: "blockNumber", type: "uint256" },
+      { name: "returnData", type: "bytes[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getBasefee",
+    outputs: [{ name: "basefee", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getBlockHash",
+    outputs: [{ name: "blockHash", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getBlockNumber",
+    outputs: [{ name: "blockNumber", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getChainId",
+    outputs: [{ name: "chainid", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCurrentBlockCoinbase",
+    outputs: [{ name: "coinbase", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCurrentBlockDifficulty",
+    outputs: [{ name: "difficulty", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCurrentBlockGasLimit",
+    outputs: [{ name: "gaslimit", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCurrentBlockTimestamp",
+    outputs: [{ name: "timestamp", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ name: "addr", type: "address" }],
+    name: "getEthBalance",
+    outputs: [{ name: "balance", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLastBlockHash",
+    outputs: [{ name: "blockHash", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        name: "requireSuccess",
+        type: "bool",
+      },
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "tryAggregate",
+    outputs: [
+      {
+        components: [
+          { name: "success", type: "bool" },
+          { name: "returnData", type: "bytes" },
+        ],
+        name: "returnData",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+          { name: "value", type: "uint256" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "aggregate3Value",
+    outputs: [
+      {
+        components: [
+          { name: "success", type: "bool" },
+          { name: "returnData", type: "bytes" },
+        ],
+        name: "returnData",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+          { name: "allowFailure", type: "bool" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "aggregate3",
+    outputs: [
+      {
+        components: [
+          { name: "success", type: "bool" },
+          { name: "returnData", type: "bytes" },
+        ],
+        name: "returnData",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { name: "target", type: "address" },
+          { name: "callData", type: "bytes" },
+        ],
+        name: "calls",
+        type: "tuple[]",
+      },
+    ],
+    name: "blockAndAggregate",
+    outputs: [
+      { name: "blockNumber", type: "uint256" },
+      { name: "blockHash", type: "bytes32" },
+      {
+        components: [
+          { name: "success", type: "bool" },
+          { name: "returnData", type: "bytes" },
+        ],
+        name: "returnData",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+```
+
+## 常用方法
+
+- `aggregate`：所有调用必须成功，否则整体失败
+- `tryAggregate`： 每个调用单独返回 success 标记，部分失败可接受
+- `aggregate3`： 支持设置 `allowFailure`，细粒度控制容错
+- `aggregate3Value`：支持传 ETH 到每个调用（适用于 payable 函数）
+- `blockAndAggregate`： 返回区块高度、区块 hash 以及调用结果
+- `getBlockNumber`： 返回当前区块号
+- `getBlockHash`：返回当前区块哈希
+- `getLastBlockHash`：返回上一个区块哈希
+- `getCurrentBlockTimestamp`：返回当前区块的时间戳
+- `getCurrentBlockDifficulty`：返回当前区块的难度
+- `getCurrentBlockGasLimit`：返回当前区块的 `gas` 上限
+- `getCurrentBlockCoinbase`：返回矿工地址（block.coinbase），用于一些奖励相关应用
+- `getChainId`：返回当前链的 **ID**
+- `getBasefee`：返回当前区块的 base fee（基础 `gas` 单价，EIP-1559）
+- `getEthBalance`：获取目标地址的 ETH 余额
+
+**示例**
+
+```js
+import { JsonRpcProvider, Contract } from "ethers";
+
+const multicall3Address = "0xca11bde05977b3631167028862be2a173976ca11";
+
+// ABI
+const getBasefeeAbi = [
+  {
+    inputs: [],
+    name: "getBasefee",
+    outputs: [{ name: "basefee", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+const provider = new JsonRpcProvider(
+  "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5"
+);
+const multicall = new Contract(multicall3Address, getBasefeeAbi, provider);
+
+// 调用 getBasefee
+const baseFee = await multicall.getBasefee();
+console.log(baseFee.toString());
+```
+
+import GetBasefee from "./components/GetBasefee";
+
+<GetBasefee />
+
+## 总结
+
+本章学习了如何使用 **Multicall3** 合约进行批量查询，包括批量获取多个 **ERC-20** 代币余额、解码返回数据，以及常用的 **Multicall3** 方法和完整 **ABI**。通过 **Multicall3**，可以极大提升链上数据查询的效率，降低 **gas** 成本，非常适合在 **DApp** 前端或链下数据聚合场景中使用。
+
+本章所有示例代码，均可在 [GitHub](https://github.com/xjh22222228/ethers-tutorial/blob/main/docs/advanced/multicallQuery/components) 中找到。

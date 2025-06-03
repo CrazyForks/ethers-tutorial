@@ -5,16 +5,10 @@ import "dotenv/config";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-const config: Config = {
+const conf: Config = {
   title: "Ethers.js 教程",
   favicon: "img/favicon.ico",
-  scripts: [
-    {
-      src: "//sdk.51.la/js-sdk-pro.min.js",
-      async: true,
-      defer: true,
-    },
-  ],
+  scripts: [],
   // Set the production url of your site here
   url: "https://ethersjs.cn",
   // Set the /<baseUrl>/ pathname under which your site is served
@@ -117,5 +111,15 @@ const config: Config = {
     },
   } satisfies Preset.ThemeConfig,
 };
+
+if (process.env.NODE_ENV !== "development") {
+  conf.scripts.push({
+    src: "//sdk.51.la/js-sdk-pro.min.js",
+    async: true,
+    defer: true,
+  });
+}
+
+const config: Config = conf;
 
 export default config;

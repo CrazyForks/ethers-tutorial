@@ -45,11 +45,13 @@
 
 **第一章：** [Interface 类 - Interface 常用操作](./docs/advanced/interface/index.mdx)
 
-**第二章：** [ENS - 注册属于自己的 ENS 域名](./docs/advanced/ens/index.md)
+**第二章：** [Multicall3 批量查询](./docs/advanced/multicallQuery/index.mdx)
 
-**第三章：** [流行钱包 - 判断安装与授权](./docs/advanced/multipleWallets/index.mdx)
+**第三章：** [ENS - 注册属于自己的 ENS 域名](./docs/advanced/ens/index.md)
 
-**第四章：** [处理输入安全](./docs/advanced/security/index.mdx)
+**第四章：** [流行钱包 - 判断安装与授权](./docs/advanced/multipleWallets/index.mdx)
+
+**第五章：** [处理输入安全](./docs/advanced/security/index.mdx)
 
 ### 实战
 
