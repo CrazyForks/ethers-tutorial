@@ -7,12 +7,7 @@ import { ethers } from "ethers";
 import { Button, notification } from "antd";
 
 const Wallet: React.FC = () => {
-  function createWallet() {
-    const wallet2 = new ethers.Wallet(
-      "94e4e351a390d675b210a2e929fa57362682d9c4ffa6464c7e67f173c90cc7ba"
-    );
-    console.log(wallet2.address);
-
+  function createRandomWallet() {
     const wallet = ethers.Wallet.createRandom();
     notification.success({
       duration: 0,
@@ -29,7 +24,7 @@ const Wallet: React.FC = () => {
   }
 
   return (
-    <Button type="primary" onClick={createWallet}>
+    <Button type="primary" onClick={createRandomWallet}>
       创建随机钱包
     </Button>
   );
