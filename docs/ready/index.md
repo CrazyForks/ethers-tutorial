@@ -38,22 +38,13 @@
 
 你也可以使用 [infura](https://www.infura.io/zh) 或者其他提供测试平台，但最好以教程为主。
 
-## infura
-
-和 `Buildbear` 平台类似，提供了 `Sepolia` 测试网，部分章节需要用到 `Sepolia` 测试网。
-
-前往注册 [infura](https://www.infura.io/zh) 并得到 `API Key`。
-
-- 测试网 RPC: `https://sepolia.infura.io/v3/YOUR_API_KEY`
-- 主网 RPC: `https://mainnet.infura.io/v3/YOUR_API_KEY`
-
 ## 教程用到的相关信息
 
-RPC 节点 `https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5` 如需调用转账请修改为您的 `RPC` 节点。
-
-钱包地址 `0x2cfc43b94126595e8b636fed9fb585ff220bc97d` 如需转账 `ETH` 或者其他合约代币，可以转账到此地址进行学习。
-
-`USDC` 合约地址： `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`
+- 测试 RPC 节点：https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5 如需调用转账请修改为您的 `RPC` 节点。
+- Sepolia RPC 公共节点：https://ethereum-sepolia-rpc.publicnode.com
+- 以太坊主网公共节点：https://ethereum-rpc.publicnode.com
+- 钱包地址：`0x2cfc43b94126595e8b636fed9fb585ff220bc97d` 如需转账 `ETH` 或者其他合约代币，可以转账到此地址进行学习。
+- `USDC` 合约地址： `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`
 
 ## 运行项目
 

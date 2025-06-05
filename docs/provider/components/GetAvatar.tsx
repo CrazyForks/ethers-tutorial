@@ -6,8 +6,8 @@ import React from "react";
 import { ethers } from "ethers";
 import { Button, notification, Modal, Form, Input } from "antd";
 
-const RPC = "https://rpc.buildbear.io/outstanding-juggernaut-05cd9cc5";
-const address = "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d";
+const RPC = "https://ethereum-rpc.publicnode.com";
+const ENS = "vitalik.eth";
 
 const Component: React.FC = () => {
   const [form] = Form.useForm();
@@ -19,29 +19,17 @@ const Component: React.FC = () => {
     notification.destroy();
     try {
       const values = await form.getFieldsValue();
-      if (!values.address) {
+      if (!values.ENS) {
         return;
       }
 
       const provider = new ethers.JsonRpcProvider(values.RPC);
-
-      const transactionCount = await provider.getTransactionCount(
-        values.address || address
-      );
-      const transactionPendingCount = await provider.getTransactionCount(
-        values.address || address,
-        "pending"
-      );
+      const avatar = await provider.getAvatar(values.ENS);
 
       notification.success({
         duration: 0,
-        message: "交易次数：",
-        description: (
-          <>
-            <div>已确认交易的计数: {transactionCount}</div>
-            <div>包括未确认交易的计数: {transactionPendingCount}</div>
-          </>
-        ),
+        message: "ENS 头像地址",
+        description: String(avatar),
       });
 
       handleCancel();
@@ -66,7 +54,7 @@ const Component: React.FC = () => {
   return (
     <>
       <Modal
-        title="查询交易次数"
+        title="查询 ENS 头像地址"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -89,17 +77,17 @@ const Component: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            initialValue={address}
-            label="地址"
-            name="address"
-            rules={[{ message: "请输入地址" }]}
+            initialValue={ENS}
+            label="ENS域名"
+            name="ENS"
+            rules={[{ required: true, message: "请输入ENS域名" }]}
           >
-            <Input placeholder="请输入地址" />
+            <Input placeholder="请输入ENS域名" />
           </Form.Item>
         </Form>
       </Modal>
       <Button type="primary" onClick={showModal} loading={loading}>
-        查询交易次数 getTransactionCount
+        查询 ENS 头像地址
       </Button>
     </>
   );

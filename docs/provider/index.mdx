@@ -450,6 +450,18 @@ import ResolveName from "./components/ResolveName";
 
 <ResolveName />
 
+## getAvatar 查询 ENS 头像地址
+
+`getAvatar` 方法用于查询以太坊名称服务（ENS）中与特定 ENS 名称关联的头像（avatar）。具体来说，它通过 ENS 的文本记录（text record）或 NFT 头像（如 ERC-721 或 ERC-1155 代币）来获取与 ENS 名称绑定的头像数据。
+
+```js
+const avatar = await provider.getAvatar("vitalik.eth");
+```
+
+import GetAvatar from "./components/GetAvatar";
+
+<GetAvatar />
+
 ## 总结
 
 本文详细介绍了 `ethers.js` 中 `Provider` 的常用方法，包括如何获取账户余额、网络信息、Gas 费用、区块高度、交易详情、交易回执、交易次数、地址字节码以及区块信息。通过这些方法，开发者可以方便地读取链上各种数据，监控区块链状态，分析交易和区块内容，并为 DApp 或脚本开发提供坚实的数据基础。掌握 `Provider` 的用法，是以太坊开发的基础能力之一。
