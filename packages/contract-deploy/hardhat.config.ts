@@ -1,7 +1,7 @@
 import { HardhatUserConfig, vars } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
-const PRIMARY_KEY = vars.get("PRIMARY_KEY");
+const PRIVATE_KEY = vars.get("PRIVATE_KEY");
 const INFURA_API_KEY = vars.get("INFURA_API_KEY");
 
 const config: HardhatUserConfig = {
@@ -12,7 +12,7 @@ const config: HardhatUserConfig = {
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: [PRIMARY_KEY],
+      accounts: [PRIVATE_KEY],
     },
   },
 };

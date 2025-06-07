@@ -14,7 +14,7 @@ const Component: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
 
   // 查询余额
-  async function sendERC20Transaction() {
+  async function handleOk() {
     setLoading(true);
     notification.destroy();
     try {
@@ -79,7 +79,7 @@ const Component: React.FC = () => {
       <Modal
         title="查询合约信息 Contract"
         open={isModalOpen}
-        onOk={sendERC20Transaction}
+        onOk={handleOk}
         onCancel={handleCancel}
         confirmLoading={loading}
       >

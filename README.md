@@ -57,6 +57,8 @@
 
 **第一章：** [dApp - 编写简易 dApp 应用](./docs/combat/dApp/index.mdx)
 
+**第二章：** [部署合约 - 部署自己的合约代币](./docs/combat/contractDepoly/index.mdx)
+
 ### 其他
 
 [水龙头](./docs/other/faucet/index.md)

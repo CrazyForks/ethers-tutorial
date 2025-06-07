@@ -10,7 +10,7 @@ $ pnpm i
 
 ```bash
 # 设置钱包密钥
-$ npm run setEnv PRIMARY_KEY
+$ npm run setEnv PRIVATE_KEY
 
 # 设置 infura api key
 $ npm run setEnv INFURA_API_KEY
