@@ -25,7 +25,7 @@ const wallet = new ethers.Wallet(privateKey, provider);
 
 转账接收者直接使用下面地址 `0x817c6ef5f2ef3cc56ce87942bf7ed74138ec284c` 不需要修改，交易结果可以在 [buildbear](https://explorer.buildbear.io/outstanding-juggernaut-05cd9cc5/address/0x817c6ef5f2ef3cc56ce87942bf7ed74138ec284c) 测试平台查看。
 
-```js
+```js {12-99}
 import { ethers } from "ethers";
 // 配置提供者（例如 buildbear、Infura、Alchemy 或本地节点）
 const provider = new ethers.JsonRpcProvider(
@@ -46,7 +46,7 @@ const amountInEther = "0.01"; // 转账金额（单位：ETH）
 
 使用 `provider.getTransactionCount` 方法获取当前钱包的 nonce，防止重复交易。
 
-```js
+```js {16-17}
 import { ethers } from "ethers";
 // 配置提供者（例如 buildbear、Infura、Alchemy 或本地节点）
 const provider = new ethers.JsonRpcProvider(
@@ -70,7 +70,7 @@ const nonce = await provider.getTransactionCount(wallet.address, "pending");
 
 使用 `provider.getFeeData` 方法获取当前网络的 `Gas` 费用。
 
-```js
+```js {19-20}
 import { ethers } from "ethers";
 // 配置提供者（例如 buildbear、Infura、Alchemy 或本地节点）
 const provider = new ethers.JsonRpcProvider(
@@ -116,7 +116,7 @@ const tx = {
 
 调用钱包 `sendTransaction` 方法发送交易，返回 `TransactionResponse` 对象。
 
-```js
+```js {35-36}
 import { ethers } from "ethers";
 // 配置提供者（例如 buildbear、Infura、Alchemy 或本地节点）
 const provider = new ethers.JsonRpcProvider(
@@ -161,7 +161,7 @@ const transaction = await wallet.sendTransaction(tx);
 
 以下是全部完整转账代码。
 
-```js
+```js {38-41}
 import { ethers } from "ethers";
 // 配置提供者（例如 buildbear、Infura、Alchemy 或本地节点）
 const provider = new ethers.JsonRpcProvider(
