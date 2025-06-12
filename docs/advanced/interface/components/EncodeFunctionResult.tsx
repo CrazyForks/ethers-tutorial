@@ -9,7 +9,7 @@ import { Button, notification, Modal, Form, Input } from "antd";
 const abi = `
 [
   "function transfer(address to, uint256 amount) returns (bool)",
-  "event Transfer(address indexed from, address indexed to, uint256 amount)",
+  "event Transfer(address indexed from, address indexed to, uint256 amount)"
 ]
 `.trim();
 const functionName = `transfer`.trim();
@@ -27,7 +27,7 @@ const Component: React.FC = () => {
     try {
       const values = await form.getFieldsValue();
       const iface = new ethers.Interface(eval(values.abi));
-      const data = iface.encodeErrorResult(
+      const data = iface.encodeFunctionResult(
         values.functionName,
         eval(values.value)
       );
