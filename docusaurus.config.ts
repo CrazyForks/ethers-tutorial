@@ -118,6 +118,11 @@ if (process.env.NODE_ENV !== "development") {
     async: true,
     defer: true,
   });
+  conf.scripts.push({
+    src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2853614204651252",
+    async: true,
+    crossorigin: "anonymous",
+  });
 }
 
 const config: Config = conf;
