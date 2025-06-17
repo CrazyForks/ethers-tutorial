@@ -6,10 +6,17 @@ import Layout from "@theme/Layout";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import Heading from "@theme/Heading";
 import styles from "./index.module.css";
-import Link from "@docusaurus/Link";
+import { useHistory } from "@docusaurus/router";
+import Button from "@site/src/components/Button";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
+  const history = useHistory();
+
+  function handleClick() {
+    history.push("/docs/basic");
+  }
+
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className={styles.container}>
@@ -19,10 +26,10 @@ function HomepageHeader() {
           {siteConfig.title}
         </Heading>
         <p className={styles.hero__subtitle}>
-          最详细的 Ethers.js web3 入门教程
+          最详细的 Ethers.js v6 web3 入门教程
         </p>
         <div className={styles.buttons}>
-          <Link to="/docs/basic/">开始学习</Link>
+          <Button onClick={handleClick}>开始学习</Button>
         </div>
         <div className={styles.featureGrid}>
           <div className={styles.featureItem}>

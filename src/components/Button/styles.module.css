@@ -1,0 +1,29 @@
+.button {
+  --a: #644dff;
+  --b: #4836bb;
+  --c: #654dff63;
+  cursor: pointer;
+  width: 184px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.125em;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #fff;
+  background: var(--a);
+  border: 2px solid var(--b);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 0 var(--b);
+  transform: skew(-10deg);
+  transition: all 0.1s ease;
+  filter: drop-shadow(0 15px 20px var(--c));
+}
+
+.button:active {
+  letter-spacing: 0px;
+  transform: skew(-10deg) translateY(8px);
+  box-shadow: 0 0 0 var(--c);
+}
