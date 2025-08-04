@@ -29,9 +29,9 @@
 
 **第七章：** [钱包 - 将钱包连接到网络](./docs/wallet/connectWalletProvider.mdx)
 
-**第八章：** [转账 - 使用 ETH 进行转账](./docs/transaction/transactionEth.mdx)
+**第八章：** [转账 - 使用 ETH 进行转账](./docs/transaction/transactionEth/index.mdx)
 
-**第九章：** [转账 - 使用 ERC-20 进行转账](./docs/transaction/transactionERC20.mdx)
+**第九章：** [转账 - 使用 ERC-20 进行转账](./docs/transaction/transactionERC20/index.mdx)
 
 **第十章：** [事件监听与过滤](./docs/events/index.mdx)
 
@@ -64,8 +64,6 @@
 [水龙头](./docs/other/faucet/index.md)
 
 [Gas 手续费](./docs/other/gas/index.md)
-
-正在编写中...
 
 ## 在线阅读
 
