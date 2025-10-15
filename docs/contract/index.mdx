@@ -57,7 +57,7 @@ const abi = [
 ];
 
 // 第一个参数是合约地址
-const contract = new ethers.Contract(
+const tokencontract = new ethers.Contract(
   "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
   abi,
   provider
@@ -65,7 +65,7 @@ const contract = new ethers.Contract(
 
 // 调用 ABI 编写的方法
 // 查询代币余额，返回原始 wei
-const balance = await contract.balanceOf(
+const balance = await tokencontract.balanceOf(
   // 钱包地址
   "0x2cfc43b94126595e8b636fed9fb585ff220bc97d"
 );
