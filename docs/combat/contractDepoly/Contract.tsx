@@ -37,9 +37,7 @@ const Component: React.FC = () => {
       );
 
       // 调用 abi 编写的方法
-      const balance = await contract.balanceOf(
-        "0x2cFC43B94126595E8B636fed9fB585fF220Bc97d"
-      );
+      const balance = await contract.balanceOf(values.address);
       const symbol = await contract.symbol();
       const decimals = await contract.decimals();
       notification.success({
