@@ -109,9 +109,9 @@ import GetNetwork from "./components/GetNetwork";
 - 支持 EIP-1559：提供与 EIP-1559（伦敦硬分叉引入的费用市场）相关的参数，如基础费用和优先费用。
 
 ```js
-const freeData = await provider.getFeeData();
+const feeData = await provider.getFeeData();
 console.log(
-  `当前网络的Gas费用：${freeData.gasPrice.toString()} wei，当前网络的最大Gas费：${freeData.maxFeePerGas.toString()} wei，当前网络的最大优先级Gas费：${freeData.maxPriorityFeePerGas.toString()} wei`
+  `当前网络的Gas费用：${feeData.gasPrice.toString()} wei，当前网络的最大Gas费：${feeData.maxFeePerGas.toString()} wei，当前网络的最大优先级Gas费：${feeData.maxPriorityFeePerGas.toString()} wei`
 );
 ```
 
